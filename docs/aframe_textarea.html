@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc EN">
+  <title>WikiCommons2AFrame</title>
+  <script src="js/linkparam.js"></script>
+  <!-- Printing and PDF exports -->
+  <script>
+  </script>
+
+  <script>
+  //---------------------------------------
+  //------DEFAULT VALUES-------------------
+  //---------------------------------------
+  var vSkyImage = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Aldara_parks.jpg/1280px-Aldara_parks.jpg";
+  var vAframeCode = "";
+  //---------------------------------------
+  var vOffline = false; // set to true for Debugging in offline mode
+  //---------------------------------------
+
+  function el(pID) {
+    return document.getElementById(pID)
+  };
+
+  function appendScene(ascene,ac) {
+    // append JSON elements to scene
+    var t = null;
+    if (ac) {
+      for (var tag in ac) {
+        if (ac.hasOwnProperty(tag)) {
+          // create a DOM element e.g. for tag="a-text"
+          t = document.createElement(tag);
+          for (var att in ac[tag]) {
+            // append all attributes
+            if (ac[tag].hasOwnProperty(att)) {
+              t.setAttribute(att,ac[tag][att]);
+            }
+          }
+        };
+        ascene.appendChild(t);
+        console.log("Append Aframe: "+ascene.innerHTML);
+      }
+    }
+  }
+</script>
+
+</head>
+<body  style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
+  <h2>AFrame Source Code for 360 Degree Image</h2>
+  <a-scene id="aframescene" style="display:none">
+  </a-scene>
+      <textarea id="output" rows="140" cols="120">
+    output
+    </textarea>
+  </div>
+<div style="display:none">
+  <b>Emulated Wiki Source:</b></br>
+    <textarea id="aframehead" rows="12" cols="120">
+      &lt;!DOCTYPE html&gt;
+      &lt;html&gt;
+        &lt;head&gt;
+          &lt;title&gt;A-Frame Demo&lt;/title&gt;
+          &lt;meta name="description" content="A-Frame Demo"&gt;
+          &lt;script src="https://aframe.io/releases/0.7.0/aframe.min.js"&gt;&lt;/script&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+          &lt;a-scene&gt;
+</textarea>
+
+<textarea id="aframetail" rows="12" cols="120">
+            &lt;/a-scene&gt;
+          &lt;/body&gt;
+        &lt;/html&gt;
+</textarea>
+</div>
+
+  <!--
+  <script src="reveal/lib/js/head.min.js"></script>
+  <script src="reveal/js/reveal.js"></script>
+-->
+    <script>
+    var ac = {};
+    var ascene = el("aframescene");
+    //---------------------------------------
+    //------READ LINKPARAMETER---------------
+    //---------------------------------------
+    var vLinkParam = new LinkParam();
+    vLinkParam.init(document);
+    //------ AFRAMECODE ---------------------
+    var ac = {};
+    var ascene = el("aframescene");
+
+    if (vLinkParam.exists("aframecode")) {
+      // e.g. index.html?author=Engelbert_Niehaus
+      vAframeCode = vLinkParam.getValue("aframecode");
+      try {
+       ac = JSON.parse(vAframeCode);
+      } catch(e) {
+        alert(e); // error in the above string (in this case, yes)!
+        ac = null
+      };
+      appendScene(ascene,ac)
+    };
+    //console.log("AFrame-Code: "+vAframeCode);
+    console.log("AFrame-Code: "+vAframeCode);
+    //------ SKY --------------------------
+    if (vLinkParam.exists("skyimage")) {
+      // e.g. index.html?title=Normen,_Metriken,_Topologie
+      vSkyImage= vLinkParam.getValue("skyimage");
+    };
+    var sky = document.createElement('a-sky');
+    sky.setAttribute("src",vSkyImage);
+    sky.setAttribute("rotation","0 -130 0");
+    ascene.appendChild(sky);
+    //el("aframescene").innerHtml = vAframeCode;
+    //--------------------------------------
+    el("output").value = el("aframehead").value + el("aframescene").innerHTML +
+                         "\n" + el("aframetail").value
+
+    </script>
+  </body>
+
+</html>
