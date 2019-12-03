@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>WikiCommons2AFrame - Load Images into ZIP</title>
+    <!-- Main CSS -->
+    <link href="css/main.css" rel="stylesheet">
+    <!-- JSZip is needed to handle ZIP files -->
+    <script src="js/jszip.js"></script>
+    <!-- FileSaver is needed to save the generated ZIP file as Download -->
+    <script src="js/filesaver.js"></script>
+    <script src="js/loadfile4dom.js"></script>
+    <script src="js/string.js"></script>
+    <script>
+      var vDataJSON = {
+        "image360html": "undefined string for HTML",
+        "index360html": "undefined string for HTML",
+        "files4json": {},
+        "maincss": "undefined string fro CSS"
+      }
+    </script>
+    <script src="db/files4json.js"></script>
+    <script src="db/image360html.js"></script>
+    <script src="db/index360html.js"></script>
+    <script src="db/maincss.js"></script>
+    <script>
+        //console.log("vDataJSON.aframelib: "+vDataJSON.aframelib);
+        var zip = new JSZip();
+        zip.file("README.txt","WikiCommons2AFrame - Upload 360 Degree Images to ZIP file\n\nThis is a ZIP-file created with WikiCommons2AFrame and\napplication of the library LoadFile4DOM, that allows \nthe upload of 360 degree images into a ZIP-file with LoadFile4DOM.\nSee https://niehausbert.gitlab.io/loadfile4dom/upload2zip.html and https://niebert.github.io/WikiCommons2AFrame/load_images2zip.html");
+        var vAframeLib = "undefined aframe library";
+        console.log("LOAD2ZIP");
+        if (vDataJSON.files4json.hasOwnProperty("files")) {
+          console.log("LOAD2ZIP: vDataJSON.files4json.files exist");
+          var vFiles = vDataJSON.files4json.files;
+          if (vFiles.length > 0) {
+            var vFileName = vFiles[0].name || "Undef_Filename.js";
+            var vData = vFiles[0].file;
+            console.log("LOAD2ZIP: '" + vFileName + "' base64 encoded file");
+            zip.file("js/"+vFileName,vData,{base64: true});
+          } else {
+            console.error("ERROR-LOAD2ZIP: no files stored in files4json");
+          }
+          if (vFiles.length > 1) {
+            var vFileName = vFiles[1].name || "Undef_Filename.js";
+            var vData = vFiles[1].file;
+            console.log("LOAD2ZIP: '" + vFileName + "' base64 encoded file");
+            zip.file("css/"+vFileName,vData,{base64: true});
+          } else {
+            console.error("ERROR-LOAD2ZIP: no CSS-files stored in files4json");
+          }
+        } else {
+          console.error("ERROR-LOAD2ZIP: vDataJSON.files4json.files undefined");
+        }
+        var lf4d = new LoadFile4DOM();
+        var options = {
+          "debug": false // if true, it will show the hidden <input type="file" ...> loaders in DOM
+        };
+        lf4d.init(document,options);
+        //-----------------------------------------------
+        //----- Create a new Loader "file2image" --------
+        //-----------------------------------------------
+        var file2image = lf4d.get_loader_options("addfile2image","image_thumb");
+        file2image.returntype = "tag";
+        file2image.width = 200;
+        file2image.multiple = true;
+        // Define what to do with the loaded data
+        file2image.onload = function (data,err) {
+          if (err) {
+            // do something on error, err contains error message
+            console.error(err);
+          } else {
+            // do something with the file content in data e.g. store  in a HTML textarea (e.g. <textarea id="mytextarea" ...>
+            console.log("CALL: file2image.onload('" + data.name + "')");
+            var vNode = document.getElementById("outlist");
+            if (vNode) {
+              //console.log("CALL: file2image.onload('" + data.name + "'): "+JSON.stringify(data,null,4));
+              vNode.innerHTML = vNode.innerHTML + "<br><tt>" + data.name + "</tt> Type: " + data.mime_type + "<br>" + data.tag + " ";
+              zip.file("img360/"+data.name, data.file, {base64: true});
+              var html_file = vDataJSON.image360html;
+              html_file = replaceString(html_file,"___MIME_TYPE___", data.mime_type);
+              html_file = replaceString(html_file,"___BASE64_IMAGE___", data.file);
+              var vName = getName4URL(data.name);
+              zip.file("img360/"+vName+".html",html_file);
+              vImage360_List.push(vName);
+              zip.file("index.html",create_image_html_list(vImage360_List))
+            } else {
+              console.error("ERROR: DOM Element 'outlist' does not exist!");
+            }
+
+          }
+        };
+        // create the load dialog 'file2image'
+        lf4d.create_load_dialog(file2image);
+        //-----------------------------------------------
+        //--- DOWNLOAD ZIP ------------------------------
+        //---Use FileSaver.js by Eli Grey to save ZIP----
+        //-----------------------------------------------
+        function download_zip(pFilename,pZIP) {
+          var vFilename = pFilename || "my_loaded_files.zip";
+          pZIP.generateAsync({type:"blob"}).then(function (blob) { // 1) generate the zip file
+            saveAs(blob, vFilename);                          // 2) trigger the download
+          }, function (err) {
+            console.error("ERROR: generation of zip-file '" + vFilename + "' - "+err);
+          });
+        }
+        //-----------------------------------------------
+        console.log("Load String Templates:");
+    </script>
+    <!-- <script src="db/aframelib.js"></script> -->
+
+        <script>
+        console.log("vDataJSON.aframelib: "+vDataJSON.aframelib);
+        var vImage360_List = [];
+
+          function create_image_html_list(pImage360_List) {
+            var out = "";
+            var indent = "\n      "
+            for (var i = 0; i < pImage360_List.length; i++) {
+              out += indent + "<li>";
+              out += indent + "   <a href=\"img360/" + pImage360_List[i]+".html\" target=\"_blank\">"+vImage360_List[i]+"</a>";
+              out += indent + "</li>";
+            };
+            var html_out = vDataJSON.index360html;
+            html_out = replaceString(html_out,"___IMAGE360_LIST___",out);
+            return html_out;
+          }
+
+          var vDomain = "wikicommons";
+          var vFiles = {
+            "wikicommons":"360_degree_View_of_the_Shore_temple.jpg",
+            "weblink":"https://niebert.github.io/HuginSample/img/durlach_saumarkt.jpg"
+          };
+
+          var SampleFile = {
+            "Aldara Park":{
+              "title":"Aldara Park",
+              "color":"",
+              "url":""
+            }
+          }
+
+          function el(pID) {
+            return document.getElementById(pID)
+          };
+
+          function swap_image_source() {
+            var vWikiDomain = el("sImageSource").value;
+            var vURL = "";
+            switch (vWikiDomain) {
+              case "wikicommons":
+                el("tImage").value = "Aldara_parks.jpg";
+                vURL = "http://en.wikipedia.org/wiki/Special:FilePath/"+el("tImage").value;
+              break;
+              case "weblink":
+                el("tImage").value = "https://niebert.github.io/HuginSample/img/rieselfelder1.jpg"
+                vURL = el("tImage").value;
+              break;
+              default:
+                vURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Aldara_parks.jpg/1280px-Aldara_parks.jpg";
+            };
+
+          }
+
+          function getImageURL() {
+            var vWikiDomain = el("sImageSource").value;
+            var vURL = "";
+            switch (vWikiDomain) {
+              case "wikicommons":
+
+                vURL = "http://en.wikipedia.org/wiki/Special:FilePath/"+el("tImage").value;
+              break;
+              case "weblink":
+                vURL = el("tImage").value;
+              break;
+              default:
+                vURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Aldara_parks.jpg/1280px-Aldara_parks.jpg";
+            };
+            return vURL
+          }
+
+          function callWikiDisplay() {
+            //var vURL = "https://"+el("sWikiLanguage").value + "." + el("sImageSource").value+".org/wiki/";
+            //vURL += encodeURI(el("tSkyImage").value);
+            //document.location.href=vURL;
+            var vURL = getImageURL();
+            window.open(vURL);
+          };
+
+          function callWikiSource() {
+            var vURL = "aframe_textarea.html?skyimage="+el("tSkyImage").value;
+            vURL += "&aframecode="+encodeURI(el("tAframeCode").value);
+            vURL += "&useaframecode="+encodeURI(el("sUseAframeCode").value);
+            //document.location.href=vURL;
+            window.open(vURL);
+          };
+
+          function changeImage(pDomain) {
+            // store current file in tImage to vFiles
+            vFiles[vDomain] = el("tImage").value;
+            // set the file for
+            el("tImage").value = vFiles[pDomain] || "undefined.jpg";
+            el("tSkyImage").value = getImageURL();
+            console.log("Change Image: '"+pDomain+"' File: '"+vFiles[pDomain]+"'");
+            vDomain = pDomain;
+          }
+
+        </script>
+
+  </head>
+  <body onload="lf4d.create()">
+    <hr>
+      <center>
+        <h2>Wiki Commons to 360-Degree Aframe Starter</h2>
+        <h3><i>based on AFrame Library: <a href="https://aframe.io/" target="_blank">AFrame 3D Models</a></i></h3>
+      </center>
+    <hr>
+    <p>
+      <a href="https://www.github.com/niebert/WikiCommons2AFrame" target="_blank">WikiCommons2AFrame</a> will create a 360 Degree Image on the fly and create a <a href="https://aframe.io/examples/showcase/sky/" target="_blank">AFrame VR</a>.<br>
+      The WikiCommon image as source image is used (see <a href="https://en.wikiversity.org/wiki/3D_Modelling/Create_3D_Models/Wiki_360_Degree_AFrame" target="_blank">Create 360 Degree Image for AFrame</a>)
+    </p>
+    <br>
+    <hr>
+    <!-- Inject Loaded Filenames into 'outlist' -->
+    <b>Loaded 360 Degree Images:</b>
+    <button onclick="lf4d.open_dialog('addfile2image');return false">Add Image to ZIP Dialog</button>
+    <br>
+    <!-- Used Libraries -->
+    <button onclick="download_zip('myfiles.zip',zip);return false">Save Generated ZIP</button>
+    <hr>
+    <center>
+      <form action="wikicommons2aframe.html" target="_blank">
+    <table border="1" style="display:none">
+      <tr>
+        <td>
+          <b>Wiki Domain</b>
+        </td>
+        <td>
+          <select name="domain" id="sImageSource" onchange="swap_image_source(this.value)">
+               <option value="wikicommons">Wiki Commons</option>
+               <option value="weblink" selected>Web Link to Image</option>
+            </select>
+          </td>
+      </tr>
+      <tr>
+        <td>
+          <b>Sky Image</b>
+        </td>
+        <td>
+          <input type="text" size="80" id="tImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg" onchange="changeImage(el('sImageSource').value)">
+          <input type="button" id="bWikiDisplay" value="Display Source Image" onclick="callWikiDisplay()">
+        </td>
+      </tr>
+      <tr style="display:non">
+        <td>
+          <b>Image</b>
+        </td>
+        <td>
+          <input type="text" size="80" name="skyimage" id="tSkyImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg">
+        </td>
+      </tr>
+      <tr>
+          <td valign="top">
+            <b>Additional Aframe Code</b><br>
+            Use Additional Code
+            <select name="useaframecode" id="sUseAframeCode">
+                 <option value="yes" selected>Yes</option>
+                 <option value="no">No</option>
+              </select>
+          </td>
+          <td>
+            <textarea name="aframecode" id="tAframeCode" rows="10" cols="120">
+{
+  "a-text": {
+    "font":"kelsonsans" ,
+    "value":"My Title in 360 Image",
+    "color":"green",
+    "width":"6",
+    "position":"-3.5 2.25 -2.5",
+    "rotation":"0 15 0"
+  }
+}
+          </textarea>
+          </td>
+      </tr>
+      <tr>
+        <td>
+          <b>WikiCommons to AFrame Converter:</b>
+        </td>
+        <td>
+
+          <input type="button" id="bWikiSource" value="Display Aframe Source" onclick="callWikiSource()" style="display:noneC">
+          <input type="submit" id="bSubmit" value="Show 360 Degree Image">
+        </td>
+      </tr>
+
+    </table>
+    <ul id="outlist">
+    </ul>
+    <hr>
+
+    </form>
+    </center>
+    <br>
+    <p>
+    <div id="footer" align="center" style="font-size: 80%">
+				<a href="https://en.wikiversity.org/wiki/3D_Modelling" target="_blank">Wikiversity:3D Modelling</a><br>
+				<a href="https://www.github.com/niebert/WikiCommons2AFrame" target="_blank">GitHub-Repo</a> -
+				2018 - Engelbert Niehaus -
+				<a href="https://github.com/niebert/WikiCommons2AFrame/archive/master.zip" target="_blank">Download GitHub (2018)</a><br/>
+			</div>
+    </p>
+    <hr>
+  </body>
+
+</html>
