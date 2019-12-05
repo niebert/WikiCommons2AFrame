@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Starter for WikiCommons2AFrame</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
+    <script>
+      var vDomain = "wikicommons";
+      var vFiles = {
+        "wikicommons":"360_degree_View_of_the_Shore_temple.jpg",
+        "weblink":"https://niebert.github.io/HuginSample/img/durlach_saumarkt.jpg"
+      };
+
+      var SampleFile = {
+        "Aldara Park":{
+          "title":"Aldara Park",
+          "color":"",
+          "url":""
+        }
+      }
+
+      function el(pID) {
+        return document.getElementById(pID)
+      };
+
+      function getImageURL() {
+        var vWikiDomain = el("sImageSource").value;
+        var vURL = "";
+        switch (vWikiDomain) {
+          case "wikicommons":
+            vURL = "http://en.wikipedia.org/wiki/Special:FilePath/"+el("tImageWikiCommons").value;
+          break;
+          case "weblink":
+            vURL = el("tImage").value;
+          break;
+          default:
+            vURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Aldara_parks.jpg/1280px-Aldara_parks.jpg";
+        };
+        return vURL
+      }
+
+      function callWikiDisplay() {
+        //var vURL = "https://"+el("sWikiLanguage").value + "." + el("sImageSource").value+".org/wiki/";
+        //vURL += encodeURI(el("tSkyImage").value);
+        //document.location.href=vURL;
+        var vURL = getImageURL();
+        window.open(vURL);
+      };
+
+      function callWikiSource() {
+        var vURL = "aframe_textarea.html?skyimage="+el("tSkyImage").value;
+        vURL += "&aframecode="+encodeURI(el("tAframeCode").value);
+        vURL += "&useaframecode="+encodeURI(el("sUseAframeCode").value);
+        //document.location.href=vURL;
+        window.open(vURL);
+      };
+
+      function changeImage(pDomain) {
+        // store current file in tImage to vFiles
+        vFiles[vDomain] = el("tImage").value;
+        // set the file for
+        el("tImage").value = vFiles[pDomain] || "undefined.jpg";
+        el("tSkyImage").value = getImageURL();
+        console.log("Change Image: '"+pDomain+"' File: '"+vFiles[pDomain]+"'");
+        vDomain = pDomain;
+      }
+
+    </script>
+    <hr>
+      <center>
+        <h2>Wiki Commons to 360-Degree Aframe Starter</h2>
+        <h3>
+          <i>based on AFrame Library: <a href="https://aframe.io/" target="_blank">AFrame 3D Models</a></i><br>
+          <a href="index.html">WikiCommons Tool List</a>
+        </h3>
+      </center>
+    <hr>
+    <textarea name="aframetpl" id="tAframeTPL" rows="10" cols="120" style="display:none">
+{
+"a-text": {
+ "font":"kelsonsans" ,
+ "value":"___TITLE___",
+ "color":"___COLOR___",
+ "width":"6",
+ "position":"-3.5 2.25 -2.5",
+ "rotation":"0 15 0"
+}
+}
+  </textarea>
+
+    <center>
+    <p>
+      <a href="https://www.github.com/niebert/WikiCommons2AFrame" target="_blank">WikiCommons2AFrame</a> will create a 360 Degree Image on the fly and create a <a href="https://aframe.io/examples/showcase/sky/" target="_blank">AFrame VR</a>.<br>
+      The WikiCommon image as source image is used (see <a href="https://en.wikiversity.org/wiki/3D_Modelling/Create_3D_Models/Wiki_360_Degree_AFrame" target="_blank">Create 360 Degree Image for AFrame</a>)
+    </p>
+    <br>
+    <form action="wikicommons2aframe.html" target="_blank">
+    <table border="1">
+      <tr>
+        <td>
+          <b>Wiki Domain</b>
+        </td>
+        <td>
+          <select name="domain" id="sImageSource" onchange="changeImage(this.value)">
+               <option value="wikicommons">Wiki Commons</option>
+               <option value="weblink" selected>Web Link to Image</option>
+            </select>
+          </td>
+      </tr>
+      <tr>
+        <td>
+          <b>Sky Image URL</b>
+        </td>
+        <td>
+          <input type="text" size="80" id="tImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg" onchange="changeImage(el('sImageSource').value)">
+          <input type="button" id="bWikiDisplay" value="Display Source Image" onclick="callWikiDisplay()">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <b>Wiki Commons Image</b>
+        </td>
+        <td>
+          <input type="text" size="80" id="tImageWikiCommons" value="Aldara_parks" onchange="setWikiCommonsImage(this.value)">
+          <input type="button" id="bWikiDisplay" value="Display Source Image" onclick="callWikiDisplay()">
+        </td>
+      </tr>
+      <tr style="display:non">
+        <td>
+          <b>Image</b>
+        </td>
+        <td>
+          <input type="text" size="80" name="skyimage" id="tSkyImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg">
+        </td>
+      </tr>
+      <tr>
+          <td valign="top">
+            <b>Additional Aframe Code</b><br>
+            Use Additional Code
+            <select name="useaframecode" id="sUseAframeCode">
+                 <option value="yes" selected>Yes</option>
+                 <option value="no">No</option>
+              </select>
+          </td>
+          <td>
+            <textarea name="aframecode" id="tAframeCode" rows="10" cols="120">
+{
+  "a-text": {
+    "font":"kelsonsans" ,
+    "value":"My Title in 360 Image",
+    "color":"green",
+    "width":"6",
+    "position":"-3.5 2.25 -2.5",
+    "rotation":"0 15 0"
+  }
+}
+          </textarea>
+          </td>
+      </tr>
+      <tr>
+        <td>
+          <b>WikiCommons to AFrame Converter:</b>
+        </td>
+        <td>
+
+          <input type="button" id="bWikiSource" value="Display Aframe Source" onclick="callWikiSource()" style="display:noneC">
+          <input type="submit" id="bSubmit" value="Show 360 Degree Image">
+        </td>
+      </tr>
+
+    </table>
+    </form>
+    </center>
+    <br>
+    <p>
+    <div id="footer" align="center" style="font-size: 80%">
+				<a href="https://en.wikiversity.org/wiki/3D_Modelling" target="_blank">Wikiversity:3D Modelling</a><br>
+				<a href="https://www.github.com/niebert/WikiCommons2AFrame" target="_blank">GitHub-Repo</a> -
+				2018 - Engelbert Niehaus -
+				<a href="https://github.com/niebert/WikiCommons2AFrame/archive/master.zip" target="_blank">Download GitHub (2018)</a><br/>
+			</div>
+    </p>
+    <hr>
+  </body>
+</html>

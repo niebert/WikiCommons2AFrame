@@ -20,6 +20,7 @@ vDataJSON["index360html"] = `
     </p>
     <ul>___IMAGE360_LIST___
     </ul>
+    <hr>
   </body>
 </html>
 `;

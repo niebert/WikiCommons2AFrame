@@ -11,13 +11,18 @@
     <script src="js/filesaver.js"></script>
     <script src="js/loadfile4dom.js"></script>
     <script src="js/string.js"></script>
+    <script src="js/showhide.js"></script>
     <script>
       var vDataJSON = {
         "image360html": "undefined string for HTML",
         "index360html": "undefined string for HTML",
         "files4json": {},
         "maincss": "undefined string fro CSS"
-      }
+      };
+      // The following array contains all the uploaded
+      // image file names without extension.
+      var vImage360_List = [];
+
     </script>
     <script src="db/files4json.js"></script>
     <script src="db/image360html.js"></script>
@@ -32,6 +37,7 @@
         if (vDataJSON.files4json.hasOwnProperty("files")) {
           console.log("LOAD2ZIP: vDataJSON.files4json.files exist");
           var vFiles = vDataJSON.files4json.files;
+          // JS-Lib: add the aframe-vX.X.X.js to the ZIP files
           if (vFiles.length > 0) {
             var vFileName = vFiles[0].name || "Undef_Filename.js";
             var vData = vFiles[0].file;
@@ -40,6 +46,7 @@
           } else {
             console.error("ERROR-LOAD2ZIP: no files stored in files4json");
           }
+          // CSS-File: add the main.css to the ZIP files
           if (vFiles.length > 1) {
             var vFileName = vFiles[1].name || "Undef_Filename.js";
             var vData = vFiles[1].file;
@@ -74,15 +81,21 @@
             var vNode = document.getElementById("outlist");
             if (vNode) {
               //console.log("CALL: file2image.onload('" + data.name + "'): "+JSON.stringify(data,null,4));
-              vNode.innerHTML = vNode.innerHTML + "<br><tt>" + data.name + "</tt> Type: " + data.mime_type + "<br>" + data.tag + " ";
+              vNode.innerHTML = vNode.innerHTML + "<br><b>Image Title:</b> <input type='text' id='tImageTitle" + vImage360_List.length + "' value='Image " + data.name + "'><br><b>MIME Type:</b> <tt>" + data.mime_type + "</tt><br>" + data.tag + " ";
               zip.file("img360/"+data.name, data.file, {base64: true});
               var html_file = vDataJSON.image360html;
               html_file = replaceString(html_file,"___MIME_TYPE___", data.mime_type);
               html_file = replaceString(html_file,"___BASE64_IMAGE___", data.file);
               var vName = getName4URL(data.name);
               zip.file("img360/"+vName+".html",html_file);
+              // push the name of the file to the vImage360_List array
+              // the array will be used to create the "index.html" in the
+              // generated ZIP file with create_image_html_list(vImage360_List).
               vImage360_List.push(vName);
-              zip.file("index.html",create_image_html_list(vImage360_List))
+              //Adding the index.html to ZIP  will be performed on click
+              // on the event of the ZIP download with the command:
+              //  zip.file("index.html",create_image_html_list(vImage360_List));
+              show("bSaveZIP");
             } else {
               console.error("ERROR: DOM Element 'outlist' does not exist!");
             }
@@ -97,6 +110,7 @@
         //-----------------------------------------------
         function download_zip(pFilename,pZIP) {
           var vFilename = pFilename || "my_loaded_files.zip";
+          pZIP.file("index.html",create_image_html_list(vImage360_List));
           pZIP.generateAsync({type:"blob"}).then(function (blob) { // 1) generate the zip file
             saveAs(blob, vFilename);                          // 2) trigger the download
           }, function (err) {
@@ -110,20 +124,28 @@
 
         <script>
         console.log("vDataJSON.aframelib: "+vDataJSON.aframelib);
-        var vImage360_List = [];
 
-          function create_image_html_list(pImage360_List) {
+        function getImage360Title(pi) {
+          var vImageTitle = "Image Title for Image "+pi;
+          var vNode = el("tImageTitle"+pi);
+          if (vNode) {
+            vImageTitle = vNode.value;
+          };
+          return vImageTitle;
+        }
+
+        function create_image_html_list(pImage360_List) {
             var out = "";
             var indent = "\n      "
             for (var i = 0; i < pImage360_List.length; i++) {
               out += indent + "<li>";
-              out += indent + "   <a href=\"img360/" + pImage360_List[i]+".html\" target=\"_blank\">"+vImage360_List[i]+"</a>";
+              out += indent + "   <a href=\"img360/" + pImage360_List[i]+".html\" target=\"_blank\">"+getImage360Title(i)+"</a>";
               out += indent + "</li>";
             };
             var html_out = vDataJSON.index360html;
             html_out = replaceString(html_out,"___IMAGE360_LIST___",out);
             return html_out;
-          }
+        }
 
           var vDomain = "wikicommons";
           var vFiles = {
@@ -218,87 +240,19 @@
       <a href="https://www.github.com/niebert/WikiCommons2AFrame" target="_blank">WikiCommons2AFrame</a> will create a 360 Degree Image on the fly and create a <a href="https://aframe.io/examples/showcase/sky/" target="_blank">AFrame VR</a>.<br>
       The WikiCommon image as source image is used (see <a href="https://en.wikiversity.org/wiki/3D_Modelling/Create_3D_Models/Wiki_360_Degree_AFrame" target="_blank">Create 360 Degree Image for AFrame</a>)
     </p>
-    <br>
     <hr>
     <!-- Inject Loaded Filenames into 'outlist' -->
-    <b>Loaded 360 Degree Images:</b>
+    <b>Load 360 Degree Images:</b>
+    <br>
     <button onclick="lf4d.open_dialog('addfile2image');return false">Add Image to ZIP Dialog</button>
     <br>
-    <!-- Used Libraries -->
-    <button onclick="download_zip('myfiles.zip',zip);return false">Save Generated ZIP</button>
     <hr>
     <center>
-      <form action="wikicommons2aframe.html" target="_blank">
-    <table border="1" style="display:none">
-      <tr>
-        <td>
-          <b>Wiki Domain</b>
-        </td>
-        <td>
-          <select name="domain" id="sImageSource" onchange="swap_image_source(this.value)">
-               <option value="wikicommons">Wiki Commons</option>
-               <option value="weblink" selected>Web Link to Image</option>
-            </select>
-          </td>
-      </tr>
-      <tr>
-        <td>
-          <b>Sky Image</b>
-        </td>
-        <td>
-          <input type="text" size="80" id="tImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg" onchange="changeImage(el('sImageSource').value)">
-          <input type="button" id="bWikiDisplay" value="Display Source Image" onclick="callWikiDisplay()">
-        </td>
-      </tr>
-      <tr style="display:non">
-        <td>
-          <b>Image</b>
-        </td>
-        <td>
-          <input type="text" size="80" name="skyimage" id="tSkyImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg">
-        </td>
-      </tr>
-      <tr>
-          <td valign="top">
-            <b>Additional Aframe Code</b><br>
-            Use Additional Code
-            <select name="useaframecode" id="sUseAframeCode">
-                 <option value="yes" selected>Yes</option>
-                 <option value="no">No</option>
-              </select>
-          </td>
-          <td>
-            <textarea name="aframecode" id="tAframeCode" rows="10" cols="120">
-{
-  "a-text": {
-    "font":"kelsonsans" ,
-    "value":"My Title in 360 Image",
-    "color":"green",
-    "width":"6",
-    "position":"-3.5 2.25 -2.5",
-    "rotation":"0 15 0"
-  }
-}
-          </textarea>
-          </td>
-      </tr>
-      <tr>
-        <td>
-          <b>WikiCommons to AFrame Converter:</b>
-        </td>
-        <td>
-
-          <input type="button" id="bWikiSource" value="Display Aframe Source" onclick="callWikiSource()" style="display:noneC">
-          <input type="submit" id="bSubmit" value="Show 360 Degree Image">
-        </td>
-      </tr>
-
-    </table>
-    <ul id="outlist">
+      <!-- Used Libraries -->
+      <button id="bSaveZIP" onclick="download_zip('images360.zip',zip);return false" style="display:none">Save Generated ZIP</button>
+      <ul id="outlist">
     </ul>
     <hr>
-
-    </form>
     </center>
     <br>
     <p>
