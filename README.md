@@ -1,9 +1,10 @@
 # WikiCommons2AFrame
-Generates 360 degree image in AFrame for a downloaded Wiki Commons Image with Generator.
-
+Generates 360 degree image in [AFrame](https://aframe.io) for a downloaded Wiki Commons Image with Generator. The tools contain:
+* Creator a [single annotated 360 degree images](https://niebert.github.io/WikiCommons2AFrame/aframe360starter.html) with text visible in the Aframe environment.
+* Use [multiple 360 degree images](https://niebert.github.io/WikiCommons2AFrame/aframe360starter.html) for explorative environment for a geolocation. Input are the 360 degree images and the tool generates a ZIP file that contains for all location a file with the provided 360-degree images and an `index.html` that contains a link to all selected  360-degree image in AFrame. The title for the `index.html` can be defined in the tool above the selected images.
 
 ## Tutorial
-* Start the [Aframe 360 Link Creator](https://niebert.github.io/WikiCommons2AFrame).
+* You can used the [WikiCommons2AFrame Tools](https://niebert.github.io/WikiCommons2AFrame) to create 360 degree images. There are two to
 * Select an equirectangular spherical image from [WikiCommons](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Aldara_parks.jpg/1280px-Aldara_parks.jpg) or [GitHub](https://www.github.com/niebert/HuginSample)
    * from WikiCommons e.g. look for keywords "360 degree" or spherical image  
    * from GitHub and check e.g. the [HuginSample](https://www.github.com/niebert/HuginSample) and use the image URL in [WikiCommons2AFrame](https://niebert.github.io/WikiCommons2AFrame).
