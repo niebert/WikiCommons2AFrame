@@ -3,6 +3,9 @@ Generates 360 degree image in [AFrame](https://aframe.io) for a downloaded Wiki 
 * Creator a [single annotated 360 degree images](https://niebert.github.io/WikiCommons2AFrame/aframe360starter.html) with text visible in the Aframe environment.
 * Use [multiple 360 degree images](https://niebert.github.io/WikiCommons2AFrame/aframe360starter.html) for explorative environment for a geolocation. Input are the 360 degree images and the tool generates a ZIP file that contains for all location a file with the provided 360-degree images and an `index.html` that contains a link to all selected  360-degree image in AFrame. The title for the `index.html` can be defined in the tool above the selected images.
 
+## Common Pitfalls
+* **(Unzip Generated ZIP)** The `Generate ZIP` button creates and ZIP file and will be saved in your download folder. Do not start the `index.html` in the ZIP file. Unzip/extract all files before and load the `index.html` from the extracted folder.
+
 ## Tutorial
 * You can used the [WikiCommons2AFrame Tools](https://niebert.github.io/WikiCommons2AFrame) to create 360 degree images. There are two to
 * Select an equirectangular spherical image from [WikiCommons](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Aldara_parks.jpg/1280px-Aldara_parks.jpg) or [GitHub](https://www.github.com/niebert/HuginSample)
