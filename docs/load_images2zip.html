@@ -246,7 +246,15 @@
     <br>
     <button onclick="lf4d.open_dialog('addfile2image');return false">Add Image to ZIP Dialog</button>
     <br>
-    <hr>
+    <b>Common Pitfalls</b>
+    <ul>
+      <li>
+        You can add <a href="https://aframe.io/aframe/examples/boilerplate/panorama/puydesancy.jpg" target="_blank">equirectangular images</a> to the AFrame 360 degree image. The images look distorred but the images are created with a special projection and this equirectangular projection is designed for viewing in the <a href="https://aframe.io/aframe/examples/boilerplate/panorama/"></a>AFrame environment as sky. You can drag the scene and look around. You can add normal camera images with this tool but the tools have not the correct equirectangular projection for viewing as a 360 degree image.
+      </li>
+      <li>
+        The <tt>Generate ZIP</tt> button creates a ZIP file and will be saved in your download folder. If you try to start the <tt>index.html</tt> directly from  the compressed ZIP file, the AFrame 360 degree images will not work due to unresolved path names to the libraries and CSS file in a compressed ZIP. Unzip/uncompress the ZIP file first and start the <tt>index.html</tt> with your browser (Firefox, Chrome Safari) from the uncompressed folder of the ZIP file.
+      </li>
+    </ul><hr>
     <center>
       <!-- Used Libraries -->
       <button id="bSaveZIP" onclick="download_zip('images360.zip',zip);return false" style="display:none">Save Generated ZIP</button>
@@ -259,7 +267,7 @@
     <div id="footer" align="center" style="font-size: 80%">
 				<a href="https://en.wikiversity.org/wiki/3D_Modelling" target="_blank">Wikiversity:3D Modelling</a><br>
 				<a href="https://www.github.com/niebert/WikiCommons2AFrame" target="_blank">GitHub-Repo</a> -
-				2018 - Engelbert Niehaus -
+				2018/19 - Engelbert Niehaus -
 				<a href="https://github.com/niebert/WikiCommons2AFrame/archive/master.zip" target="_blank">Download GitHub (2018)</a><br/>
 			</div>
     </p>
