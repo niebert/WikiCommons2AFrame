@@ -17,3 +17,4 @@ Generates 360 degree image in [AFrame](https://aframe.io) for a downloaded Wiki 
 ## See also
 * [HuginSample](https://www.github.com/niebert/HuginSample) for generating a equirectangular image from several images taken from a center of the sphere of the 360 degree image. [Hugin is an OpenSource tool](http://hugin.sourceforge.net/) to create equirectangular images
 * [JSON3D4Aframe](https://niebert.github.io/JSON3D4Aframe) to add geometric primitives to the 3D scene.
+* [AFrame360Samples](https://www.github.com/niebert/aframe360samples) for AFrame examples with 360 degree images.
