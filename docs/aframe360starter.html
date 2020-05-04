@@ -3,8 +3,10 @@
   <head>
     <title>Starter for WikiCommons2AFrame</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link href="css/main.css" rel="stylesheet">
+    <script type="text/javascript" src="js/showhide.js"></script>
   </head>
-  <body style="margin:10px;background:#C0C0C0;font-family:Arial,Helvetica,sans-serif">
+  <body>
     <script>
       var vDomain = "wikicommons";
       var vFiles = {
@@ -64,6 +66,22 @@
         el("tSkyImage").value = getImageURL();
         console.log("Change Image: '"+pDomain+"' File: '"+vFiles[pDomain]+"'");
         vDomain = pDomain;
+        switch (vDomain) {
+          case "wikicommons":
+            show("wikicommons2div");
+            hide("weblink2div");
+            show("wikicommons2title");
+            hide("weblink2title");
+          break;
+          case "weblink":
+            show("weblink2div");
+            hide("wikicommons2div");
+            show("weblink2title");
+            hide("wikicommons2title");
+          break;
+          default:
+            vURL = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Aldara_parks.jpg/1280px-Aldara_parks.jpg";
+        };
       }
 
     </script>
@@ -72,9 +90,12 @@
         <h2>Wiki Commons to 360-Degree Aframe Starter</h2>
         <h3>
           <i>based on AFrame Library: <a href="https://aframe.io/" target="_blank">AFrame 3D Models</a></i><br>
-          <a href="index.html">WikiCommons Tool List</a>
         </h3>
       </center>
+      <h3>
+        <a href="index.html"><img src="img/icons-svg/carat-l-white.svg" alt="Back to WikiCommons2AFrame"><img src="img/icons-svg/carat-l-white.svg" alt="Back to WikiCommons2AFrame">Back</a>
+      </h3>
+
     <hr>
     <textarea name="aframetpl" id="tAframeTPL" rows="10" cols="120" style="display:none">
 {
@@ -108,30 +129,28 @@
             </select>
           </td>
       </tr>
-      <tr>
+      <tr id="weblink2sky">
         <td>
-          <b>Sky Image URL</b>
+          <b id="weblink2title">Sky Image URL</b>
+          <b id="wikicommons2title">Wiki Commons Image</b>
         </td>
         <td>
-          <input type="text" size="80" id="tImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg" onchange="changeImage(el('sImageSource').value)">
-          <input type="button" id="bWikiDisplay" value="Display Source Image" onclick="callWikiDisplay()">
+          <div id="weblink2div">
+            <input type="text" size="80" id="tImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg" onchange="changeImage(el('sImageSource').value)">
+            <input type="button" id="bWikiDisplay" value="Display Source Image" onclick="callWikiDisplay()">
+          </div>
+          <div id="wikicommons2div">
+            <input type="text" size="80" id="tImageWikiCommons" value="Aldara_parks.jpg" onchange="setWikiCommonsImage(this.value)">
+            <input type="button" id="bWikiDisplay" value="Display Source Image" onclick="callWikiDisplay()">
+            <input type="text" size="80" name="skyimage" id="tSkyImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg">
+          </div>
         </td>
       </tr>
-      <tr>
-        <td>
-          <b>Wiki Commons Image</b>
-        </td>
-        <td>
-          <input type="text" size="80" id="tImageWikiCommons" value="Aldara_parks.jpg" onchange="setWikiCommonsImage(this.value)">
-          <input type="button" id="bWikiDisplay" value="Display Source Image" onclick="callWikiDisplay()">
-        </td>
-      </tr>
-      <tr style="display:non">
+      <tr style="display:none">
         <td>
           <b>Image</b>
         </td>
         <td>
-          <input type="text" size="80" name="skyimage" id="tSkyImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg">
         </td>
       </tr>
       <tr>
@@ -182,5 +201,9 @@
 			</div>
     </p>
     <hr>
+    <script type="text/javascript">
+      hide("wikicommons2title")
+      hide("wikicommons2div")
+    </script>
   </body>
 </html>

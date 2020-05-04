@@ -24,11 +24,28 @@
     return document.getElementById(pID)
   };
 
+  function drawDataURIOnCanvas(strDataURI, canvas) {
+      "use strict";
+      var img = new window.Image();
+      img.addEventListener("load", function () {
+          canvas.getContext("2d").drawImage(img, 0, 0);
+      });
+      img.setAttribute("src", strDataURI);
+  }
 </script>
 
 </head>
 <body>
       <a-scene id="aframescene">
+        <a-assets id="assets4aframe">
+          <!--
+          <a-asset-item id="horse-obj" src="horse.obj"></a-asset-item>
+          <a-asset-item id="horse-mtl" src="horse.mtl"></a-asset-item>
+          <a-mixin id="giant" scale="5 5 5"></a-mixin>
+          <audio id="neigh" src="neigh.mp3"></audio>
+          <video id="kentucky-derby" src="derby.mp4"></video>
+          -->
+        </a-assets>
       </a-scene>
 <div style="display:none">
   <h2>Emulated Wiki Source:</h2>
@@ -60,6 +77,15 @@
       }
     }
 
+    function drawDataURIOnCanvas(strDataURI, canvas) {
+      "use strict";
+      var img = new window.Image();
+      img.addEventListener("load", function () {
+        canvas.getContext("2d").drawImage(img, 0, 0);
+      });
+      img.setAttribute("src", strDataURI);
+    }
+
     //---------------------------------------
     //------READ LINKPARAMETER---------------
     //---------------------------------------
@@ -68,6 +94,7 @@
     //------ AFRAMECODE ---------------------
     var ac = {};
     var ascene = el("aframescene");
+    var assets4af = el("assets4aframe");
 
     if (vLinkParam.exists("aframecode")) {
       // e.g. index.html?author=Engelbert_Niehaus
@@ -87,8 +114,14 @@
       // e.g. index.html?title=Normen,_Metriken,_Topologie
       vSkyImage= vLinkParam.getValue("skyimage");
     };
+    var skyasset = document.createElement('img');
+    skyasset.setAttribute("src",vSkyImage);
+    skyasset.setAttribute("id","sky");
+    skyasset.setAttribute("timeout","10000");
+    assets4af.appendChild(skyasset);
+    // <a-sky src="#sky"></a-sky>
     var sky = document.createElement('a-sky');
-    sky.setAttribute("src",vSkyImage);
+    sky.setAttribute("src","#sky");
     sky.setAttribute("rotation","0 -130 0");
     ascene.appendChild(sky);
     //el("aframescene").innerHtml = vAframeCode;
