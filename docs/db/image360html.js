@@ -6,7 +6,7 @@ vDataJSON.image360html = `
 		<meta repository='https://www.gitlab.com/niehausbert/aframe360' created='11.10.2019'>
 		<TITLE>360 Aframe Panorama</TITLE>
 		<meta name="description" content="360&deg; Image - A-Frame">
-		<script src='../js/aframe-v0.9.2.js'></script>
+		<script src='../js/aframe-v1.0.4.js'></script>
 	</HEAD>
 	<BODY>
 		<a-scene>
