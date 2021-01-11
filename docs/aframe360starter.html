@@ -64,11 +64,15 @@ var vDataJSON = {};
 
       function getImageURL() {
         var vWikiDomain = el("sImageSource").value;
+        console.log("Image Source: '" + vWikiDomain + "'");
+        // wikicommons has Cross Origin Issues - use WebLink only
+        vWikiDomain = "weblink";
         var vURL = "";
         switch (vWikiDomain) {
           case "wikicommons":
             //vURL = "http://en.wikipedia.org/wiki/Special:FilePath/"+el("tImageWikiCommons").value;
-            vURL = el("tImageWikiCommons").value;
+            //vURL = el("tImageWikiCommons").value;
+            vURL = getWikiCommonsURL();
           break;
           case "weblink":
             vURL = el("tImage").value;
@@ -83,16 +87,32 @@ var vDataJSON = {};
         //var vURL = "https://"+el("sWikiLanguage").value + "." + el("sImageSource").value+".org/wiki/";
         //vURL += encodeURI(el("tSkyImage").value);
         //document.location.href=vURL;
-        var vURL = getWikiCommonsURL();
+        var vURL = getImageURL();
+        console.log("callWikiDisplay('" + getImageURL() + "')");
         window.open(vURL);
       };
 
       function callWikiSource() {
-        var vURL = "aframe_textarea.html?skyimage="+el("tSkyImage").value;
+        console.log("callWikiSource('" + getImageURL() + "')");
+        //var vURL = "aframe_textarea.html?skyimage="+el("tSkyImage").value;
+        var vURL = "aframe_textarea.html?skyimage=" + encodeURI(getImageURL());
         vURL += "&aframecode="+encodeURI(el("tAframeCode").value);
         vURL += "&useaframecode="+encodeURI(el("sUseAframeCode").value);
         //document.location.href=vURL;
         window.open(vURL);
+      };
+
+      function callAframe360() {
+        var vURL = getImageURL();
+        console.log("callAframe360('" + vURL + "')");
+        //var vURL = "wikicommons2aframe.html?skyimage="+el("tSkyImage").value;
+        //var vURL360 = "";
+        var vURL360 = "https://niebert.github.io/WikiCommons2AFrame/";
+        vURL360 += "wikicommons2aframe.html?skyimage=" + encodeURI(getImageURL());
+        vURL360 += "&aframecode="+encodeURI(el("tAframeCode").value);
+        vURL360 += "&useaframecode="+encodeURI(el("sUseAframeCode").value);
+        //document.location.href=vURL;
+        window.open(vURL360);
       };
 
       function changeImage(pDomain) {
@@ -155,7 +175,7 @@ var vDataJSON = {};
     <br>
     <form action="wikicommons2aframe.html" target="_blank">
     <table border="1">
-      <tr>
+      <tr style="display:none">
         <td>
           <b>Wiki Domain</b>
         </td>
@@ -180,6 +200,8 @@ var vDataJSON = {};
             <input type="text" size="80" id="tImageWikiCommons" value="https://upload.wikimedia.org/wikipedia/commons/d/d8/Aldara_parks.jpg" onkeypress="changeImage(el('sImageSource').value)">
             <br>
             Wiki Commons Image Name: <input type="text" size="30" id="tImageWikiCommonsShort" value="Aldara_parks.jpg" >
+            &nbsp;
+            <img src="img/icons-svg/eye-black.svg" alt="Display View 360 Degree Image">
             <input type="button" id="bWikiDisplay" value="Display WikiCommons Image" onclick="callWikiDisplay()">
 
           </div>
@@ -196,6 +218,7 @@ var vDataJSON = {};
       <tr  style="display:none">
         <td colspan="2">
           <div id='editor_holder' style="margin:20px"></div>
+          <span id="valid_indicator">---</span>
         </td>
       </tr>
       <tr>
@@ -227,9 +250,10 @@ var vDataJSON = {};
           <b>WikiCommons to AFrame Converter:</b>
         </td>
         <td>
-
-          <input type="button" id="bWikiSource" value="Display Aframe Source" onclick="callWikiSource()" style="display:noneC">
-          <input type="submit" id="bSubmit" class="bluebutton" value="Show 360 Degree Image">
+          &nbsp;
+          <img src="img/icons-svg/fa-file-save-black.svg" alt="Display View 360 Degree Image">
+          <input type="button" id="bWikiSource" value="Save/Display Aframe Source" onclick="callWikiSource()" style="display:noneC">
+          <input type="button" id="bAframe360" class="bluebutton" value="Show 360 Degree Image" onclick="callAframe360()">
         </td>
       </tr>
 

@@ -44,13 +44,15 @@
           <a-mixin id="giant" scale="5 5 5"></a-mixin>
           <audio id="neigh" src="neigh.mp3"></audio>
           <video id="kentucky-derby" src="derby.mp4"></video>
+          <img id="asset4sky"  crossorigin="WikiCommons2AFrame" src="">
           -->
         </a-assets>
       </a-scene>
 <div style="display:none">
   <h2>Emulated Wiki Source:</h2>
     <textarea id="wikisrc" rows="12" cols="120">
-      <a-sky src="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg" rotation="0 -130 0"></a-sky>
+      <!-- <a-sky src="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg" rotation="0 -130 0"></a-sky> -->
+      <a-sky src="#asset4sky" rotation="0 -130 0"></a-sky>
       <a-text font="kelsonsans" value="Rieselfelder - Coerde" color="green" width="6" position="-3.5 2.25 -2.5" rotation="0 15 0"></a-text>
   </textarea>
 </div>
@@ -117,6 +119,7 @@
     var skyasset = document.createElement('img');
     skyasset.setAttribute("src",vSkyImage);
     skyasset.setAttribute("id","sky");
+    skyasset.setAttribute("crossorigin","WikiCommons2AFrame");
     skyasset.setAttribute("timeout","10000");
     assets4af.appendChild(skyasset);
     // <a-sky src="#sky"></a-sky>
@@ -127,6 +130,7 @@
     //el("aframescene").innerHtml = vAframeCode;
     //--------------------------------------
     </script>
-    <script src="js/aframe-v0.7.1.js"></script>
+    <!-- <script src="js/aframe-v0.7.1.js"></script> -->
     <!-- <script src="js/aframe-v1.0.4.js"></script> -->
+    <script src="js/aframe-v0.7.1.js"></script>
 </html>
