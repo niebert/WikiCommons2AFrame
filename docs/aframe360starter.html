@@ -102,15 +102,26 @@ var vDataJSON = {};
         window.open(vURL);
       };
 
-      function callAframe360() {
+      function getLinkAframe360() {
         var vURL = getImageURL();
-        console.log("callAframe360('" + vURL + "')");
+        console.log("getLinkAframe360('" + vURL + "')");
         //var vURL = "wikicommons2aframe.html?skyimage="+el("tSkyImage").value;
         //var vURL360 = "";
         var vURL360 = "https://niebert.github.io/WikiCommons2AFrame/";
         vURL360 += "wikicommons2aframe.html?skyimage=" + encodeURI(getImageURL());
         vURL360 += "&aframecode="+encodeURI(el("tAframeCode").value);
         vURL360 += "&useaframecode="+encodeURI(el("sUseAframeCode").value);
+        //document.location.href=vURL;
+        return vURL360;
+      };
+
+      function updateLinkAframe360() {
+        document.getElementById('tURL360').value = getLinkAframe360()
+      }
+
+      function callAframe360() {
+        var vURL360 = getLinkAframe360();
+        console.log("callAframe360('" + vURL360 + "')");
         //document.location.href=vURL;
         window.open(vURL360);
       };
@@ -173,7 +184,7 @@ var vDataJSON = {};
       The WikiCommon image as source image is used (see <a href="https://en.wikiversity.org/wiki/3D_Modelling/Create_3D_Models/Wiki_360_Degree_AFrame" target="_blank">Create 360 Degree Image for AFrame</a>)
     </p>
     <br>
-    <form action="wikicommons2aframe.html" target="_blank">
+    <form action="#" target="_blank">
     <table border="1">
       <tr style="display:none">
         <td>
@@ -193,11 +204,11 @@ var vDataJSON = {};
         </td>
         <td>
           <div id="weblink2div">
-            <input type="text" size="80" id="tImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg" onchange="changeImage(el('sImageSource').value)">
+            <input type="text" size="80" id="tImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg" onchange="changeImage(el('sImageSource').value);updateLinkAframe360()">
             <input type="button" id="bWikiDisplay" value="Display Source Image" onclick="callWikiDisplay()">
           </div>
           <div id="wikicommons2div">
-            <input type="text" size="80" id="tImageWikiCommons" value="https://upload.wikimedia.org/wikipedia/commons/d/d8/Aldara_parks.jpg" onkeypress="changeImage(el('sImageSource').value)">
+            <input type="text" size="80" id="tImageWikiCommons" value="https://upload.wikimedia.org/wikipedia/commons/d/d8/Aldara_parks.jpg" onkeypress="changeImage(el('sImageSource').value);updateLinkAframe360()">
             <br>
             Wiki Commons Image Name: <input type="text" size="30" id="tImageWikiCommonsShort" value="Aldara_parks.jpg" >
             &nbsp;
@@ -254,6 +265,16 @@ var vDataJSON = {};
           <img src="img/icons-svg/fa-file-save-black.svg" alt="Display View 360 Degree Image">
           <input type="button" id="bWikiSource" value="Save/Display Aframe Source" onclick="callWikiSource()" style="display:noneC">
           <input type="button" id="bAframe360" class="bluebutton" value="Show 360 Degree Image" onclick="callAframe360()">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <b>AFrame 360 URL:</b>
+        </td>
+        <td>
+          &nbsp;
+          <input type="text" size="95" name="url360link" id="tURL360" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg">
+            <input type="button" id="bLinkAframe360" class="bluebutton" value="Update 360 Degree URL" onclick="updateLinkAframe360()" style="display:none">
         </td>
       </tr>
 
@@ -319,6 +340,8 @@ var vDataJSON = {};
           indicator.textContent = "valid";
         }
       });
+
+      updateLinkAframe360();
     </script>
     <script src="jquery/external/jquery/jquery.js" type="text/javascript"></script>
     <script src="jquery/jquery-ui.js" type="text/javascript"></script>
