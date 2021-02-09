@@ -200,13 +200,23 @@ var vDataJSON = {};
       <tr id="weblink2sky">
         <td>
           <h3 id="weblink2title">Sky Image URL</h3>
+          <h3 id="wikicommons2title">Wiki Commons Image</h3>
         </td>
         <td>
           <div id="weblink2div">
-            <input type="text" size="80" id="tImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg" onchange="updateLinkAframe360()">
+            <input type="text" size="80" id="tImage" value="https://niebert.github.io/HuginSample/img/rieselfelder1.jpg" onchange="changeImage(el('sImageSource').value);updateLinkAframe360()">
             <input type="button" id="bWikiDisplay" value="Display Source Image" onclick="callWikiDisplay()">
           </div>
-         </td>
+          <div id="wikicommons2div">
+            <input type="text" size="80" id="tImageWikiCommons" value="https://upload.wikimedia.org/wikipedia/commons/d/d8/Aldara_parks.jpg" onkeypress="changeImage(el('sImageSource').value);updateLinkAframe360()">
+            <br>
+            Wiki Commons Image Name: <input type="text" size="30" id="tImageWikiCommonsShort" value="Aldara_parks.jpg" >
+            &nbsp;
+            <img src="img/icons-svg/eye-black.svg" alt="Display View 360 Degree Image">
+            <input type="button" id="bWikiDisplay" value="Display WikiCommons Image" onclick="callWikiDisplay()">
+
+          </div>
+        </td>
       </tr>
       <tr style="display:none">
         <td>
@@ -282,8 +292,8 @@ var vDataJSON = {};
     </p>
     <hr>
     <script type="text/javascript">
-      //hide("wikicommons2title")
-      //hide("wikicommons2div")
+      hide("wikicommons2title")
+      hide("wikicommons2div")
     </script>
     <script>
 
