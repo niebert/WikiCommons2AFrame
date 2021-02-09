@@ -342,7 +342,8 @@ var vDataJSON = {};
       }
       //------ SKY --------------------------
       if (vLinkParam.exists("skyimage")) {
-        // e.g. index.html?title=Normen,_Metriken,_Topologie
+        console.log("Set Sky Image via Link Paramter");
+        el("tImage").value = vLinkParam.getValue("skyimage");
         el("tSkyImage").value = vLinkParam.getValue("skyimage");
       };
       //---Update Aframe Link
