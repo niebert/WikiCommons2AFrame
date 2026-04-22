@@ -1,4 +1,7 @@
 # WikiCommons2AFrame
+
+<h3><a href="https://niebert.github.io/WikiCommons2AFrame/" target="_blank">Web Tool - WikiCommons2Aframe</a></h3>
+
 Generates 360 degree image in [AFrame](https://aframe.io) for a downloaded Wiki Commons Image with Generator. The tools contain:
 * Creator a [single annotated 360 degree images](https://niebert.github.io/WikiCommons2AFrame/aframe360starter.html) with text visible in the Aframe environment.
 * Use [multiple 360 degree images](https://niebert.github.io/WikiCommons2AFrame/aframe360starter.html) for explorative environment for a geolocation. Input are the 360 degree images and the tool generates a ZIP file that contains for all location a file with the provided 360-degree images and an `index.html` that contains a link to all selected  360-degree image in AFrame. The title for the `index.html` can be defined in the tool above the selected images.
